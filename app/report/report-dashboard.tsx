@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Progress, ProgressIndicator, ProgressTrack } from "@/components/ui/progress";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CUTOFFS } from "@/lib/config";
 import type { Report } from "@/lib/feedback";
@@ -224,7 +224,7 @@ export function ReportDashboard({ report }: { report: Report }) {
               value={`${coding.cutoff} / ${mcq.cutoff}`}
               valueUnit="pts"
               progress={100}
-              indicatorClassName="bg-slate-400"
+              indicatorClassName="[&_[data-slot=progress-indicator]]:bg-slate-400"
               footnote="Coding / MCQ qualifying benchmark"
             />
             <StatCard
@@ -234,7 +234,7 @@ export function ReportDashboard({ report }: { report: Report }) {
               value={`−${codingShort} / −${mcqShort}`}
               valueUnit="pts"
               progress={percent(coding.score, coding.cutoff)}
-              indicatorClassName="bg-amber-500"
+              indicatorClassName="[&_[data-slot=progress-indicator]]:bg-amber-500"
               footnote={
                 report.cleared
                   ? "Both sections meet their cutoffs"
@@ -287,7 +287,7 @@ function StatCard({
   value,
   valueUnit,
   progress,
-  indicatorClassName = "bg-indigo-600",
+  indicatorClassName = "[&_[data-slot=progress-indicator]]:bg-indigo-600",
   footnote,
   warn = false,
 }: {
@@ -310,11 +310,10 @@ function StatCard({
         {value}
         {valueUnit && <span className="ml-1.5 font-sans text-sm font-normal text-muted-foreground">{valueUnit}</span>}
       </p>
-      <Progress value={Math.min(progress, 100)}>
-        <ProgressTrack className="h-1.5">
-          <ProgressIndicator className={indicatorClassName} />
-        </ProgressTrack>
-      </Progress>
+      <Progress
+        value={Math.min(progress, 100)}
+        className={cn("gap-0 [&_[data-slot=progress-track]]:h-1.5", indicatorClassName)}
+      />
       <p className="text-xs text-muted-foreground">{footnote}</p>
     </Card>
   );
@@ -333,10 +332,13 @@ function FilterTabs<T extends string>({
   label: string;
 }) {
   return (
-    <Tabs value={value} onValueChange={(next) => onChange(next as T)} className="w-full sm:w-auto">
-      <TabsList aria-label={label} className="h-auto w-full flex-wrap justify-start gap-1 sm:w-auto">
+    <Tabs value={value} onValueChange={(next) => onChange(next as T)} className="w-full min-w-0 sm:w-auto">
+      <TabsList
+        aria-label={label}
+        className="group-data-horizontal/tabs:h-auto h-auto w-full max-w-full justify-start gap-1 overflow-x-auto [scrollbar-width:none] sm:w-auto sm:flex-wrap"
+      >
         {options.map((option) => (
-          <TabsTrigger key={option.value} value={option.value} className="h-8 px-3">
+          <TabsTrigger key={option.value} value={option.value} className="h-8 shrink-0 px-3">
             {option.label} ({option.count})
           </TabsTrigger>
         ))}
@@ -543,11 +545,10 @@ function ActionsSection({
                 {completed} / {actions.length} ({completedPercent}%)
               </span>
             </div>
-            <Progress value={completedPercent}>
-              <ProgressTrack className="h-1.5">
-                <ProgressIndicator className="bg-indigo-600" />
-              </ProgressTrack>
-            </Progress>
+            <Progress
+              value={completedPercent}
+              className="gap-0 [&_[data-slot=progress-track]]:h-1.5 [&_[data-slot=progress-indicator]]:bg-indigo-600"
+            />
           </Card>
         </div>
 
