@@ -167,7 +167,7 @@ export function ReportDashboard({ report }: { report: Report }) {
               <p className="text-sm text-muted-foreground">
                 Student Diagnostic Report
                 <span className="mx-2">·</span>
-                Candidate ID: <span className="font-mono font-semibold text-foreground">{report.candidate}</span>
+                Candidate: <span className="font-semibold text-foreground">{report.candidate}</span>
                 <span className="mx-2">·</span>
                 Cutoff: coding {CUTOFFS.coding} · MCQ {CUTOFFS.mcq}
               </p>
