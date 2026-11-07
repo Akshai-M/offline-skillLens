@@ -5,7 +5,6 @@ import {
   ArrowUpRight,
   Check,
   Compass,
-  Copy,
   Search,
   Target,
   TrendingUp,
@@ -19,7 +18,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CUTOFFS } from "@/lib/config";
 import type { Report } from "@/lib/feedback";
 import { cn } from "@/lib/utils";
 
@@ -122,7 +120,6 @@ function findActionIndex(topic: string, actions: ActionItem[], fallback: number)
 }
 
 export function ReportDashboard({ report }: { report: Report }) {
-  const [copied, setCopied] = useState(false);
   const [actionFilter, setActionFilter] = useState<Filter>("all");
   const [planRequest, setPlanRequest] = useState<PlanRequest | null>(null);
 
@@ -142,16 +139,6 @@ export function ReportDashboard({ report }: { report: Report }) {
   const codingShort = Math.max(coding.cutoff - coding.score, 0);
   const mcqShort = Math.max(mcq.cutoff - mcq.score, 0);
 
-  async function copySummary() {
-    try {
-      await navigator.clipboard.writeText(report.summary);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  }
-
   function openActionPlan(index: number) {
     // Show every action so the target is on screen, then ActionsSection scrolls to it.
     setActionFilter("all");
@@ -164,22 +151,17 @@ export function ReportDashboard({ report }: { report: Report }) {
         <CardContent className="flex flex-col gap-6 p-4 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <p className="text-sm text-muted-foreground">
-                Student Diagnostic Report
-                <span className="mx-2">·</span>
-                Candidate: <span className="font-semibold text-foreground">{report.candidate}</span>
-                <span className="mx-2">·</span>
-                Cutoff: coding {CUTOFFS.coding} · MCQ {CUTOFFS.mcq}
+              <p className="text-sm text-muted-foreground">Offline Competency Assessment Report</p>
+              <p className="mt-2 text-base">
+                <span className="text-muted-foreground">Name: </span>
+                <span className="font-semibold">{report.candidate}</span>
               </p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
-                Assessment Feedback for Candidate {report.candidate}
-              </h1>
+              <p className="mt-1 break-all text-base">
+                <span className="text-muted-foreground">Email: </span>
+                <span className="font-semibold">{report.email}</span>
+              </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <Button variant="secondary" onClick={copySummary}>
-                <Copy data-icon="inline-start" />
-                {copied ? "Copied" : "Copy Summary"}
-              </Button>
               <Badge
                 variant="outline"
                 className={cn(
