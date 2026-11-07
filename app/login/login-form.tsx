@@ -33,7 +33,7 @@ export function LoginForm() {
         disabled={pending}
         className="h-11 rounded-lg bg-zinc-900 px-4 text-base font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-60"
       >
-        {pending ? "Opening your report…" : "View my report"}
+        {pending ? "Opening your report" : "View my report"}
       </button>
     </form>
   );

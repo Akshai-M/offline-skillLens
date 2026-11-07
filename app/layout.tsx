@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Student Feedback Report",
-  description: "View your student feedback report",
+  title: "Offline Competency Assessment Report",
+  description: "View your offline competency assessment report",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
